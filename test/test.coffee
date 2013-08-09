@@ -142,3 +142,27 @@ module.exports =
                                     test.equals typeof result.e, 'undefined', 'e should be absent'
 
                                 test.done()
+
+    nestedArray: (test) ->
+
+                     data = [
+                         c: 1
+                         a:
+                             b: [1, 2, 3, 4, 5]
+                     ]
+
+                     projection =
+                        'a.b':
+                                $slice: 2
+
+                     results = siftprojection projection, data
+
+                     util = require 'util'
+                     console.log 'results', util.inspect results, true, 18
+
+                     test.equals results.length, 1
+                     test.equals 'object', typeof results[0].a
+                     test.ok Array.isArray results[0].a.b
+                     test.equals results[0].a.b.length, 2
+
+                     test.done()

@@ -15,7 +15,6 @@ treeSet = (obj, path, value) ->
                   obj[path] = value
 
               else
-
                   props = path.split '.'
                   nextProp = props.shift()
 
@@ -34,7 +33,7 @@ module.exports = (projection, data) ->
 
                      for own item of projection
 
-                         if projection[item] > 0
+                         if projection[item] > 0 or typeof projection[item] == 'object'
 
                              allButPresented = false
                              break
@@ -51,21 +50,24 @@ module.exports = (projection, data) ->
                          else
                              for own field of projection
 
-                                 if typeof projection[field] != 'undefined'
-
-                                     res[field] = item[field].slice 0, projection[field].$slice if typeof projection[field].$slice is 'number'
-
                                  if '.' in field
 
                                      value = treeGet item, field
 
                                      value = value.slice 0, projection[field].$slice if Array.isArray(value) and typeof projection[field].$slice is 'number'
-                                     
+
                                      treeSet res, field, value if typeof value != "undefined"
 
                                  else
+                                     if typeof projection[field] == 'object'
 
-                                     res[field] ?= item[field]
+                                         res[field] = item[field].slice 0, projection[field].$slice if typeof projection[field].$slice is 'number'
+
+                                     else
+
+                                         res[field] ?= item[field]
+
+
 
                          result.push res
 
