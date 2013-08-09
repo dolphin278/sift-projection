@@ -58,6 +58,9 @@ module.exports = (projection, data) ->
                                  if '.' in field
 
                                      value = treeGet item, field
+
+                                     value = value.slice 0, projection[field].$slice if Array.isArray(value) and typeof projection[field].$slice is 'number'
+                                     
                                      treeSet res, field, value if typeof value != "undefined"
 
                                  else
