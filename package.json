@@ -1,0 +1,24 @@
+{
+  "name": "sift-projection",
+  "version": "0.0.0",
+  "description": "MondoDB inpired array projection",
+  "main": "lib/sift-projection.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "coffee --output ./lib src/*.coffee"
+  },
+  "keywords": [
+    "mongodb",
+    "fields",
+    "projection"
+  ],
+  "author": "",
+  "license": "BSD",
+  "devDependencies": {
+    "nodeunit": "~0.8.1",
+    "coffee-script": "~1.6.3"
+  }
+}
