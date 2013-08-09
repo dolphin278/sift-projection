@@ -6,8 +6,12 @@
   "directories": {
     "test": "test"
   },
+  "repository": {
+    "type": "git",
+    "url" : "http://github.com/dolphin278/sift-projection.git"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/nodeunit/bin/nodeunit test/test.coffee",
     "prepublish": "coffee --output ./lib src/*.coffee"
   },
   "keywords": [
