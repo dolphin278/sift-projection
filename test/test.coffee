@@ -1,3 +1,4 @@
+util = require 'util'
 siftprojection = require '../src/sift-projection'
 
 module.exports =
@@ -88,7 +89,7 @@ module.exports =
 
                projection =
                    b: 1
-                   d: { $slice: 2 }
+                   d: $slice: 2
 
                results = siftprojection projection, @data
 
@@ -103,6 +104,54 @@ module.exports =
                    test.equals result.d.length, 2, 'array should have only two values'
 
                test.done()
+
+    negativeSlice: (test) ->
+
+                       projection =
+                           b: 1
+                           d: $slice: -2
+
+                       results = siftprojection projection, @data
+
+                       test.equals results.length, 3, "All items should be presented"
+
+                       console.log results
+
+                       for result in results
+
+                           test.equals typeof result.a, 'undefined', 'a should be absent'
+                           test.equals typeof result.c, 'undefined', 'c should be absent'
+                           test.equals typeof result.b, 'number', 'b should be presented'
+                           test.ok Array.isArray, result.d, 'd should be an array'
+                           test.equals result.d.length, 2, 'array should have only two values'
+
+                       test.done()
+
+
+    sliceArray: (test) ->
+
+                    projection =
+                        b: 1
+                        d: $slice: [1, 2]
+
+                    results = siftprojection projection, @data
+
+                    test.equals results.length, 3, "All items should be presented"
+
+                    console.log 'results', results
+
+                    for result, position in results
+
+                        test.equals typeof result.a, 'undefined', 'a should be absent'
+                        test.equals typeof result.c, 'undefined', 'c should be absent'
+                        test.equals typeof result.b, 'number', 'b should be presented'
+                        test.ok Array.isArray, result.d, 'd should be an array'
+                        test.equals result.d.length, 2, 'array should have only two values'
+                        test.equals result.d[0], @data[position].d[1]
+                        test.equals result.d[1], @data[position].d[2]
+
+                    test.done()
+
 
     subDocuments: (test) ->
 
@@ -152,12 +201,11 @@ module.exports =
                      ]
 
                      projection =
-                        'a.b':
-                                $slice: 2
+                         'a.b':
+                             $slice: 2
 
                      results = siftprojection projection, data
 
-                     util = require 'util'
                      console.log 'results', util.inspect results, true, 18
 
                      test.equals results.length, 1
@@ -166,3 +214,30 @@ module.exports =
                      test.equals results[0].a.b.length, 2
 
                      test.done()
+
+
+
+    nestedNegativeArraySlice: (test) ->
+
+                                  data = [
+                                      c: 1
+                                      a:
+                                          b: [1, 2, 3, 4, 5]
+                                  ]
+
+                                  projection =
+                                      'a.b':
+                                          $slice: [-3, 2]
+
+                                  results = siftprojection projection, data
+
+                                  console.log 'results', util.inspect results, true, 18
+
+                                  test.equals results.length, 1
+                                  test.equals 'object', typeof results[0].a
+                                  test.ok Array.isArray results[0].a.b
+                                  test.equals results[0].a.b.length, 2
+                                  test.equals results[0].a.b[0], 3
+                                  test.equals results[0].a.b[1], 4
+
+                                  test.done()

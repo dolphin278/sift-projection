@@ -1,6 +1,6 @@
 {
   "name": "sift-projection",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "MondoDB inpired array projection",
   "main": "lib/sift-projection.js",
   "directories": {

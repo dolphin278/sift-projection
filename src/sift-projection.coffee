@@ -50,24 +50,29 @@ module.exports = (projection, data) ->
                          else
                              for own field of projection
 
-                                 if '.' in field
+                                 value = treeGet item, field
 
-                                     value = treeGet item, field
+                                 if Array.isArray value
 
-                                     value = value.slice 0, projection[field].$slice if Array.isArray(value) and typeof projection[field].$slice is 'number'
+                                      if typeof projection[field] is "object"
 
-                                     treeSet res, field, value if typeof value != "undefined"
+                                          if typeof projection[field].$slice is "number"
 
-                                 else
-                                     if typeof projection[field] == 'object'
+                                              if projection[field].$slice >= 0
 
-                                         res[field] = item[field].slice 0, projection[field].$slice if typeof projection[field].$slice is 'number'
+                                                  value = value.slice 0, projection[field].$slice
 
-                                     else
+                                              else
 
-                                         res[field] ?= item[field]
+                                                  value = value.slice projection[field].$slice
 
+                                          if Array.isArray projection[field].$slice
 
+                                              [skip, limit] = projection[field].$slice
+
+                                              value = value.slice skip, skip + limit
+
+                                 treeSet res, field, value if typeof value != "undefined"
 
                          result.push res
 
