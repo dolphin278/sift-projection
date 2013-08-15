@@ -1,6 +1,5 @@
 .idea
 node_modules
-lib/*.js
 src/*.js
 src/*.map
 test/*.js
